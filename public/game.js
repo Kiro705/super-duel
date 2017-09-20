@@ -7,7 +7,8 @@ function preload() {
     game.load.image('ground', 'assets/platform.png');
     game.load.image('star', 'assets/star.png');
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
-    game.load.spritesheet('sword', 'assets/greenSword.png', 64, 64);
+    game.load.spritesheet('rightSword', 'assets/rightSword.png', 42, 18);
+    game.load.spritesheet('leftSword', 'assets/leftSword.png', 42, 18);
 
 }
 //spritePlane to turn gif into a spreadsheet
@@ -16,6 +17,12 @@ var player;
 var platforms;
 var cursors;
 var spaceBar;
+var rightSword;
+var leftSword;
+var attackRight;
+var attackLeft;
+let attackCooldown = 0
+let canAttack = true
 
 var stars;
 var score = 0;
@@ -81,6 +88,12 @@ function create() {
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('right', [5, 6, 7, 8], 10, true);
 
+    //Add SWORDS
+    rightSword = game.add.group();
+    leftSword = game.add.group();
+    rightSword.enableBody = true;
+    leftSword.enableBody = true;
+
     //  Finally some stars to collect
     stars = game.add.group();
 
@@ -115,11 +128,14 @@ function create() {
 function update() {
 
     //  Collide the player and the stars with the platforms
-    game.physics.arcade.collide(player, platforms);
-    game.physics.arcade.collide(stars, platforms);
+    game.physics.arcade.collide(player, platforms)
+    game.physics.arcade.collide(stars, platforms)
 
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-    game.physics.arcade.overlap(player, stars, collectStar, null, this);
+    game.physics.arcade.collide(rightSword, stars, collectStar, null, this)
+    //else if (attackLeft) {
+    //     game.physics.arcade.overlap(attackLeft, stars, collectStar, null, this);
+    // }
 
     //  Reset the players velocity (movement)
     player.body.velocity.x = 0;
@@ -167,14 +183,44 @@ function update() {
     }
 
     //ATTACKING
-    if(cursors.right.isDown && spaceBar.isDown){
-        player.body.velocity.x = 250
-        console.log('STAB!')
+
+    if (attackCooldown > 15){
+        if (attackRight){
+            attackRight.kill()
+        }
+        if (attackLeft){
+            attackLeft.kill()
+        }
     }
 
-    if(cursors.left.isDown && spaceBar.isDown){
-        player.body.velocity.x = -250
-        console.log('STAB!')
+    if (attackCooldown > 50){
+        attackCooldown = 0
+        canAttack = true
+    }
+    if (attackRight){
+        attackRight.position.x = player.position.x + 18
+        attackRight.position.y = player.position.y + 25
+    }
+
+    if (attackLeft){
+        attackLeft.position.x = player.position.x - 25
+        attackLeft.position.y = player.position.y + 25
+    }
+
+    if (canAttack){
+        if (cursors.right.isDown && spaceBar.isDown){
+            attackRight = rightSword.create(player.position.x + 18, player.position.y + 25, 'rightSword')
+            player.body.velocity.x = 1000
+            canAttack = false
+        }
+
+        if (cursors.left.isDown && spaceBar.isDown){
+            attackLeft = leftSword.create(player.position.x - 25, player.position.y + 25, 'leftSword')
+            player.body.velocity.x = -1000
+            canAttack = false
+        }
+    } else {
+        attackCooldown++
     }
 
 }
