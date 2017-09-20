@@ -33,19 +33,34 @@ function create() {
     platforms.enableBody = true;
 
     // Here we create the ground.
-    var ground = platforms.create(0, game.world.height - 64, 'ground');
+    var ground = platforms.create(0, game.world.height - 70, 'ground');
 
     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-    ground.scale.setTo(2, 2);
+    //setTo(length, height)
+    ground.scale.setTo(2, 2.5);
 
     //  This stops it from falling away when you jump on it
     ground.body.immovable = true;
 
-    //  Now let's create two ledges
-    var ledge = platforms.create(400, 400, 'ground');
+    //  Create Ledges create(shift left, shift down, group)
+    var ledge = platforms.create(600, 400, 'ground');
+    ledge.scale.setTo(0.5, 0.25);
     ledge.body.immovable = true;
 
-    ledge = platforms.create(-150, 250, 'ground');
+    ledge = platforms.create(0, 400, 'ground');
+    ledge.scale.setTo(0.5, 0.25);
+    ledge.body.immovable = true;
+
+    ledge = platforms.create(0, 150, 'ground');
+    ledge.scale.setTo(0.5, 0.25);
+    ledge.body.immovable = true;
+
+    ledge = platforms.create(600, 150, 'ground');
+    ledge.scale.setTo(0.5, 0.25);
+    ledge.body.immovable = true;
+
+    ledge = platforms.create(300, 275, 'ground');
+    ledge.scale.setTo(0.5, 0.25);
     ledge.body.immovable = true;
 
     // The player and its settings
