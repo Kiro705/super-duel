@@ -3,16 +3,19 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create
 
 function preload() {
 
-    game.load.image('sky', 'assets/sky.png');
+    game.load.image('sky', 'assets/city_sunset.png');
     game.load.image('ground', 'assets/platform.png');
     game.load.image('star', 'assets/star.png');
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+    game.load.spritesheet('sword', 'assets/greenSword.png', 64, 64);
 
 }
+//spritePlane to turn gif into a spreadsheet
 
 var player;
 var platforms;
 var cursors;
+var spaceBar;
 
 var stars;
 var score = 0;
@@ -44,23 +47,23 @@ function create() {
 
     //  Create Ledges create(shift left, shift down, group)
     var ledge = platforms.create(600, 400, 'ground');
-    ledge.scale.setTo(0.5, 0.25);
+    ledge.scale.setTo(0.5, 0.5);
     ledge.body.immovable = true;
 
     ledge = platforms.create(0, 400, 'ground');
-    ledge.scale.setTo(0.5, 0.25);
+    ledge.scale.setTo(0.5, 0.5);
     ledge.body.immovable = true;
 
     ledge = platforms.create(0, 150, 'ground');
-    ledge.scale.setTo(0.5, 0.25);
+    ledge.scale.setTo(0.5, 0.5);
     ledge.body.immovable = true;
 
     ledge = platforms.create(600, 150, 'ground');
-    ledge.scale.setTo(0.5, 0.25);
+    ledge.scale.setTo(0.5, 0.5);
     ledge.body.immovable = true;
 
     ledge = platforms.create(300, 275, 'ground');
-    ledge.scale.setTo(0.5, 0.25);
+    ledge.scale.setTo(0.5, 0.5);
     ledge.body.immovable = true;
 
     // The player and its settings
@@ -94,7 +97,7 @@ function create() {
         star.body.gravity.y = 300;
 
         //  This just gives each star a slightly random bounce value
-        star.body.bounce.y = 0.7 + Math.random() * 0.6;
+        star.body.bounce.y = 0.7 + Math.random() * 0.2;
     }
 
     //  The score
@@ -102,6 +105,10 @@ function create() {
 
     //  Our controls.
     cursors = game.input.keyboard.createCursorKeys();
+    spaceBar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
+    // spaceBar.onDown.add(function(){
+    //     this.state.start('GameState')
+    // }, this)
     
 }
 
@@ -117,25 +124,25 @@ function update() {
     //  Reset the players velocity (movement)
     player.body.velocity.x = 0;
 
-    if (cursors.left.isDown)
-    {
-        //  Move to the left
-        player.body.velocity.x = -150;
-
+    //  Move to the left
+    if (cursors.left.isDown){
+        if (player.body.touching.down){
+           player.body.velocity.x = -150;
+        } else {
+            player.body.velocity.x = -75;
+        }
         player.animations.play('left');
-    }
-    else if (cursors.right.isDown)
-    {
-        //  Move to the right
-        player.body.velocity.x = 150;
-
+    //  Move to the right
+    } else if (cursors.right.isDown) {
+        if (player.body.touching.down){
+           player.body.velocity.x = 150;
+        } else {
+            player.body.velocity.x = 75;
+        }
         player.animations.play('right');
-    }
-    else
-    {
+    } else {
         //  Stand still
         player.animations.stop();
-
         player.frame = 4;
     }
 
@@ -155,8 +162,19 @@ function update() {
 
         //  Allow the player to jump if they are touching the ground.
         if (cursors.up.isDown && player.body.touching.down){
-            player.body.velocity.y = -400;
+            player.body.velocity.y = -450;
         }
+    }
+
+    //ATTACKING
+    if(cursors.right.isDown && spaceBar.isDown){
+        player.body.velocity.x = 250
+        console.log('STAB!')
+    }
+
+    if(cursors.left.isDown && spaceBar.isDown){
+        player.body.velocity.x = -250
+        console.log('STAB!')
     }
 
 }
