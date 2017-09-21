@@ -79,15 +79,21 @@ function preload() {
     game.load.image('ground', 'assets/platform.png');
     game.load.image('star', 'assets/star.png');
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+    game.load.spritesheet('dude2', 'assets/dude2.png', 32, 48);
     game.load.spritesheet('rightSword', 'assets/rightSword.png', 42, 18);
     game.load.spritesheet('leftSword', 'assets/leftSword.png', 42, 18);
 }
 //spritePlane to turn gif into a spreadsheet
 
 var player;
+var player2;
 var platforms;
 var cursors;
 var spaceBar;
+var wKey;
+var aKey;
+var sKey;
+var dKey;
 var rightSword;
 var leftSword;
 var attackRight;
@@ -146,18 +152,25 @@ function create() {
 
     // The player and its settings
     player = game.add.sprite(32, game.world.height - 150, 'dude');
+    player2 = game.add.sprite(768, game.world.height - 150, 'dude2');
 
     //  We need to enable physics on the player
     game.physics.arcade.enable(player);
+    game.physics.arcade.enable(player2);
 
     //  Player physics properties
     player.body.bounce.y = 0.2;
     player.body.gravity.y = 1000;
     player.body.collideWorldBounds = true;
+    player2.body.bounce.y = 0.2;
+    player2.body.gravity.y = 1000;
+    player2.body.collideWorldBounds = true;
 
     //  Our two animations, walking left and right.
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('right', [5, 6, 7, 8], 10, true);
+    player2.animations.add('left', [0, 1, 2, 3], 10, true);
+    player2.animations.add('right', [5, 6, 7, 8], 10, true);
 
     //Add SWORDS
     rightSword = game.add.group();
@@ -189,26 +202,28 @@ function create() {
     //  Our controls.
     cursors = game.input.keyboard.createCursorKeys();
     spaceBar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    // spaceBar.onDown.add(function(){
-    //     this.state.start('GameState')
-    // }, this)
+    wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
+    aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
+    sKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
+    dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
 }
 
 function update() {
 
     //  Collide the player and the stars with the platforms
     game.physics.arcade.collide(player, platforms);
+    game.physics.arcade.collide(player2, platforms);
     game.physics.arcade.collide(stars, platforms);
 
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     game.physics.arcade.collide(rightSword, stars, collectStar, null, this);
-    //else if (attackLeft) {
-    //     game.physics.arcade.overlap(attackLeft, stars, collectStar, null, this);
-    // }
+    game.physics.arcade.collide(leftSword, stars, collectStar, null, this);
 
     //  Reset the players velocity (movement)
     player.body.velocity.x = 0;
+    player2.body.velocity.x = 0;
 
+    // ==============================PLAYER 1 SET UP =====================================
     //  Move to the left
     if (cursors.left.isDown) {
         if (player.body.touching.down) {
@@ -253,7 +268,7 @@ function update() {
 
     //ATTACKING
 
-    if (attackCooldown > 15) {
+    if (attackCooldown > 8) {
         if (attackRight) {
             attackRight.kill();
         }
@@ -291,6 +306,90 @@ function update() {
     } else {
         attackCooldown++;
     }
+
+    // ==============================PLAYER 2 SET UP =====================================
+    //  Move to the left
+    if (aKey.isDown) {
+        if (player2.body.touching.down) {
+            player2.body.velocity.x = -150;
+        } else {
+            player2.body.velocity.x = -75;
+        }
+        player2.animations.play('left');
+        //  Move to the right
+    } else if (dKey.isDown) {
+        if (player2.body.touching.down) {
+            player2.body.velocity.x = 150;
+        } else {
+            player2.body.velocity.x = 75;
+        }
+        player2.animations.play('right');
+    } else {
+        //  Stand still
+        player2.animations.stop();
+        player2.frame = 4;
+    }
+
+    //     //JUMPING
+    //     //only if you havent recently jumped
+    //     if(player.body.velocity.y > -75){
+    //         if (player.body.touching.down) {
+    //             player.doubleJump = true;
+    //         }
+
+    //         if (cursors.up.isDown && !player.body.touching.down){
+    //             if (player.doubleJump){
+    //                 player.body.velocity.y = -325;
+    //                 player.doubleJump = false;
+    //             }
+    //         }
+
+    //         //  Allow the player to jump if they are touching the ground.
+    //         if (cursors.up.isDown && player.body.touching.down){
+    //             player.body.velocity.y = -450;
+    //         }
+    //     }
+
+    //     //ATTACKING
+
+    //     if (attackCooldown > 8){
+    //         if (attackRight){
+    //             attackRight.kill()
+    //         }
+    //         if (attackLeft){
+    //             attackLeft.kill()
+    //         }
+    //     }
+
+    //     if (attackCooldown > 50){
+    //         attackCooldown = 0
+    //         canAttack = true
+    //     }
+    //     if (attackRight){
+    //         attackRight.position.x = player.position.x + 18
+    //         attackRight.position.y = player.position.y + 25
+    //     }
+
+    //     if (attackLeft){
+    //         attackLeft.position.x = player.position.x - 25
+    //         attackLeft.position.y = player.position.y + 25
+    //     }
+
+    //     if (canAttack){
+    //         if (cursors.right.isDown && spaceBar.isDown){
+    //             attackRight = rightSword.create(player.position.x + 18, player.position.y + 25, 'rightSword')
+    //             player.body.velocity.x = 1000
+    //             canAttack = false
+    //         }
+
+    //         if (cursors.left.isDown && spaceBar.isDown){
+    //             attackLeft = leftSword.create(player.position.x - 25, player.position.y + 25, 'leftSword')
+    //             player.body.velocity.x = -1000
+    //             canAttack = false
+    //         }
+    //     } else {
+    //         attackCooldown++
+    //     }
 }
 
 function collectStar(player, star) {
