@@ -85,25 +85,38 @@ function preload() {
 }
 //spritePlane to turn gif into a spreadsheet
 
-var player;
-var player2;
+
+//environment
 var platforms;
 var cursors;
+var stars;
+
+//Player 1
+var player;
 var spaceBar;
-var wKey;
-var aKey;
-var sKey;
-var dKey;
 var rightSword;
 var leftSword;
 var attackRight;
 var attackLeft;
 var attackCooldown = 0;
 var canAttack = true;
-
-var stars;
 var score = 0;
 var scoreText;
+
+//Player 2
+var player2;
+var wKey;
+var aKey;
+var sKey;
+var dKey;
+var rightSword2;
+var leftSword2;
+var attackRight2;
+var attackLeft2;
+var attackCooldown2 = 0;
+var canAttack2 = true;
+var score2 = 0;
+var scoreText2;
 
 function create() {
 
@@ -178,6 +191,11 @@ function create() {
     rightSword.enableBody = true;
     leftSword.enableBody = true;
 
+    rightSword2 = game.add.group();
+    leftSword2 = game.add.group();
+    rightSword2.enableBody = true;
+    leftSword2.enableBody = true;
+
     //  Finally some stars to collect
     stars = game.add.group();
 
@@ -216,7 +234,7 @@ function update() {
     game.physics.arcade.collide(stars, platforms);
 
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-    game.physics.arcade.collide(rightSword, stars, collectStar, null, this);
+    game.physics.arcade.overlap(rightSword, stars, collectStar, null, this);
     game.physics.arcade.collide(leftSword, stars, collectStar, null, this);
 
     //  Reset the players velocity (movement)
@@ -292,13 +310,13 @@ function update() {
     }
 
     if (canAttack) {
-        if (cursors.right.isDown && spaceBar.isDown) {
+        if (cursors.right.isDown && cursors.down.isDown) {
             attackRight = rightSword.create(player.position.x + 18, player.position.y + 25, 'rightSword');
             player.body.velocity.x = 1000;
             canAttack = false;
         }
 
-        if (cursors.left.isDown && spaceBar.isDown) {
+        if (cursors.left.isDown && cursors.down.isDown) {
             attackLeft = leftSword.create(player.position.x - 25, player.position.y + 25, 'leftSword');
             player.body.velocity.x = -1000;
             canAttack = false;
@@ -331,65 +349,65 @@ function update() {
     }
 
     //     //JUMPING
-    //     //only if you havent recently jumped
-    //     if(player.body.velocity.y > -75){
-    //         if (player.body.touching.down) {
-    //             player.doubleJump = true;
-    //         }
+    //only if you havent recently jumped
+    if (player2.body.velocity.y > -75) {
+        if (player2.body.touching.down) {
+            player2.doubleJump2 = true;
+        }
 
-    //         if (cursors.up.isDown && !player.body.touching.down){
-    //             if (player.doubleJump){
-    //                 player.body.velocity.y = -325;
-    //                 player.doubleJump = false;
-    //             }
-    //         }
+        if (wKey.isDown && !player2.body.touching.down) {
+            if (player2.doubleJump2) {
+                player2.body.velocity.y = -325;
+                player2.doubleJump2 = false;
+            }
+        }
 
-    //         //  Allow the player to jump if they are touching the ground.
-    //         if (cursors.up.isDown && player.body.touching.down){
-    //             player.body.velocity.y = -450;
-    //         }
-    //     }
+        //  Allow the player to jump if they are touching the ground.
+        if (wKey.isDown && player2.body.touching.down) {
+            player2.body.velocity.y = -450;
+        }
+    }
 
     //     //ATTACKING
 
-    //     if (attackCooldown > 8){
-    //         if (attackRight){
-    //             attackRight.kill()
-    //         }
-    //         if (attackLeft){
-    //             attackLeft.kill()
-    //         }
-    //     }
+    if (attackCooldown2 > 8) {
+        if (attackRight2) {
+            attackRight2.kill();
+        }
+        if (attackLeft2) {
+            attackLeft2.kill();
+        }
+    }
 
-    //     if (attackCooldown > 50){
-    //         attackCooldown = 0
-    //         canAttack = true
-    //     }
-    //     if (attackRight){
-    //         attackRight.position.x = player.position.x + 18
-    //         attackRight.position.y = player.position.y + 25
-    //     }
+    if (attackCooldown2 > 50) {
+        attackCooldown2 = 0;
+        canAttack2 = true;
+    }
+    if (attackRight2) {
+        attackRight2.position.x = player2.position.x + 18;
+        attackRight2.position.y = player2.position.y + 25;
+    }
 
-    //     if (attackLeft){
-    //         attackLeft.position.x = player.position.x - 25
-    //         attackLeft.position.y = player.position.y + 25
-    //     }
+    if (attackLeft2) {
+        attackLeft2.position.x = player2.position.x - 25;
+        attackLeft2.position.y = player2.position.y + 25;
+    }
 
-    //     if (canAttack){
-    //         if (cursors.right.isDown && spaceBar.isDown){
-    //             attackRight = rightSword.create(player.position.x + 18, player.position.y + 25, 'rightSword')
-    //             player.body.velocity.x = 1000
-    //             canAttack = false
-    //         }
+    if (canAttack2) {
+        if (dKey.isDown && sKey.isDown) {
+            attackRight2 = rightSword2.create(player2.position.x + 18, player2.position.y + 25, 'rightSword');
+            player2.body.velocity.x = 1000;
+            canAttack2 = false;
+        }
 
-    //         if (cursors.left.isDown && spaceBar.isDown){
-    //             attackLeft = leftSword.create(player.position.x - 25, player.position.y + 25, 'leftSword')
-    //             player.body.velocity.x = -1000
-    //             canAttack = false
-    //         }
-    //     } else {
-    //         attackCooldown++
-    //     }
+        if (aKey.isDown && sKey.isDown) {
+            attackLeft2 = leftSword2.create(player2.position.x - 25, player2.position.y + 25, 'leftSword');
+            player2.body.velocity.x = -1000;
+            canAttack2 = false;
+        }
+    } else {
+        attackCooldown2++;
+    }
 }
 
 function collectStar(player, star) {
