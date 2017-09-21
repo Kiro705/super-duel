@@ -11,6 +11,7 @@ var PreloadState = {
     this.load.image('blueOrb', 'assets/blueWin.png')
     this.load.spritesheet('dude', 'assets/dude.png', 32, 48)
     this.load.spritesheet('dude2', 'assets/dude2.png', 32, 48)
+    this.load.spritesheet('despawn', 'assets/despawn.png', 27, 36)
     this.load.spritesheet('rightSword', 'assets/rightSword.png', 42, 18)
     this.load.spritesheet('leftSword', 'assets/leftSword.png', 42, 18)
     //spritePlane to turn gif into a spreadsheet

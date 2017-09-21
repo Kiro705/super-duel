@@ -317,6 +317,8 @@ const GameState = {
         }
 
         function killPlayer (playerOne, target) {
+            despawn = game.add.sprite(playerOne.position.x, playerOne.position.y, 'despawn')
+            despawn.animations.add('despawn', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], 10, false)
             playerOne.kill()
             this.isAlive = false
             score2++
@@ -331,6 +333,8 @@ const GameState = {
         }
 
         function killPlayer2 (playerTwo, target){
+            despawn = game.add.sprite(playerTwo.position.x, playerTwo.position.y, 'despawn')
+            despawn.animations.add('despawn', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], 10, false)
             playerTwo.kill()
             this.isAlive2 = false
             score++
@@ -345,6 +349,10 @@ const GameState = {
         }
 
         if (this.gameOver){
+            despawn.animations.play('despawn')
+            if (this.gameOverCounter > 115) {
+                despawn.kill()
+            }
             this.gameOverCounter++
         }
         if (this.gameOverCounter > 150){
