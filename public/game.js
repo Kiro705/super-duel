@@ -18,7 +18,7 @@ function preload() {
 //environment
 var platforms
 var cursors
-var stars
+//var stars
 
 //Player 1
 var player
@@ -31,6 +31,7 @@ let attackCooldown = 0
 let canAttack = true
 var score = 0
 var scoreText
+let isAlive = true
 
 //Player 2
 var player2
@@ -46,6 +47,7 @@ let attackCooldown2 = 0
 let canAttack2 = true
 var score2 = 0
 var scoreText2
+let isAlive2 = true
 
 
 
@@ -95,8 +97,8 @@ function create() {
     ledge.body.immovable = true
 
     // The player and its settings
-    player = game.add.sprite(32, game.world.height - 150, 'dude')
-    player2 = game.add.sprite(768, game.world.height - 150, 'dude2')
+    player = game.add.sprite(32, 250, 'dude2')
+    player2 = game.add.sprite(748, 250, 'dude')
 
     //  We need to enable physics on the player
     game.physics.arcade.enable(player)
@@ -128,26 +130,26 @@ function create() {
     leftSword2.enableBody = true
 
     //  Finally some stars to collect
-    stars = game.add.group()
+    // stars = game.add.group()
 
-    //  We will enable physics for any star that is created in this group
-    stars.enableBody = true
+    // //  We will enable physics for any star that is created in this group
+    // stars.enableBody = true
 
-    //  Here we'll create 12 of them evenly spaced apart
-    for (var i = 0; i < 12; i++)
-    {
-        //  Create a star inside of the 'stars' group
-        var star = stars.create(i * 70, 0, 'star')
+    // //  Here we'll create 12 of them evenly spaced apart
+    // for (var i = 0; i < 12; i++)
+    // {
+    //     //  Create a star inside of the 'stars' group
+    //     var star = stars.create(i * 70, 0, 'star')
 
-        //  Let gravity do its thing
-        star.body.gravity.y = 300
+    //     //  Let gravity do its thing
+    //     star.body.gravity.y = 300
 
-        //  This just gives each star a slightly random bounce value
-        star.body.bounce.y = 0.7 + Math.random() * 0.2
-    }
+    //     //  This just gives each star a slightly random bounce value
+    //     star.body.bounce.y = 0.7 + Math.random() * 0.2
+    // }
 
-    //  The score
-    scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' })
+    // //  The score
+    // scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' })
 
     //  Our controls.
     cursors = game.input.keyboard.createCursorKeys()
@@ -164,19 +166,22 @@ function update() {
     //  Collide the player and the stars with the platforms
     game.physics.arcade.collide(player, platforms)
     game.physics.arcade.collide(player2, platforms)
-    game.physics.arcade.collide(stars, platforms)
+    //game.physics.arcade.collide(stars, platforms)
 
-    //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-    game.physics.arcade.overlap(rightSword, stars, collectStar, null, this)
-    game.physics.arcade.collide(leftSword, stars, collectStar, null, this)
+    //  Checks to see if you got the other player
+    // game.physics.arcade.overlap(rightSword, stars, collectStar, null, this)
+    game.physics.arcade.overlap(rightSword, player2, killPlayer2, null, this)
+    game.physics.arcade.overlap(leftSword, player2, killPlayer2, null, this)
 
+    game.physics.arcade.overlap(rightSword2, player, killPlayer, null, this)
+    game.physics.arcade.overlap(leftSword2, player, killPlayer, null, this)
     //  Reset the players velocity (movement)
     player.body.velocity.x = 0
     player2.body.velocity.x = 0
 
     // ==============================PLAYER 1 SET UP =====================================
     //  Move to the left
-    if (cursors.left.isDown){
+    if (aKey.isDown){
         if (player.body.touching.down){
            player.body.velocity.x = -150
         } else {
@@ -184,7 +189,7 @@ function update() {
         }
         player.animations.play('left')
     //  Move to the right
-    } else if (cursors.right.isDown) {
+    } else if (dKey.isDown) {
         if (player.body.touching.down){
            player.body.velocity.x = 150
         } else {
@@ -204,7 +209,7 @@ function update() {
             player.doubleJump = true;
         }
 
-        if (cursors.up.isDown && !player.body.touching.down){
+        if (wKey.isDown && !player.body.touching.down){
             if (player.doubleJump){
                 player.body.velocity.y = -325;
                 player.doubleJump = false;
@@ -212,7 +217,7 @@ function update() {
         }
 
         //  Allow the player to jump if they are touching the ground.
-        if (cursors.up.isDown && player.body.touching.down){
+        if (wKey.isDown && player.body.touching.down){
             player.body.velocity.y = -450;
         }
     }
@@ -242,14 +247,14 @@ function update() {
         attackLeft.position.y = player.position.y + 25
     }
 
-    if (canAttack){
-        if (cursors.right.isDown && cursors.down.isDown){
+    if (canAttack && isAlive){
+        if (dKey.isDown && sKey.isDown){
             attackRight = rightSword.create(player.position.x + 18, player.position.y + 25, 'rightSword')
             player.body.velocity.x = 1000
             canAttack = false
         }
 
-        if (cursors.left.isDown && cursors.down.isDown){
+        if (aKey.isDown && sKey.isDown){
             attackLeft = leftSword.create(player.position.x - 25, player.position.y + 25, 'leftSword')
             player.body.velocity.x = -1000
             canAttack = false
@@ -260,7 +265,7 @@ function update() {
 
 // ==============================PLAYER 2 SET UP =====================================
     //  Move to the left
-    if (aKey.isDown){
+    if (cursors.left.isDown){
         if (player2.body.touching.down){
            player2.body.velocity.x = -150
         } else {
@@ -268,7 +273,7 @@ function update() {
         }
         player2.animations.play('left')
     //  Move to the right
-    } else if (dKey.isDown) {
+    } else if (cursors.right.isDown) {
         if (player2.body.touching.down){
            player2.body.velocity.x = 150
         } else {
@@ -288,7 +293,7 @@ function update() {
             player2.doubleJump2 = true
         }
 
-        if (wKey.isDown && !player2.body.touching.down){
+        if (cursors.up.isDown && !player2.body.touching.down){
             if (player2.doubleJump2){
                 player2.body.velocity.y = -325
                 player2.doubleJump2 = false
@@ -296,7 +301,7 @@ function update() {
         }
 
         //  Allow the player to jump if they are touching the ground.
-        if (wKey.isDown && player2.body.touching.down){
+        if (cursors.up.isDown && player2.body.touching.down){
             player2.body.velocity.y = -450
         }
     }
@@ -326,14 +331,14 @@ function update() {
         attackLeft2.position.y = player2.position.y + 25
     }
 
-    if (canAttack2){
-        if (dKey.isDown && sKey.isDown){
+    if (canAttack2 && isAlive2){
+        if (cursors.right.isDown && cursors.down.isDown){
             attackRight2 = rightSword2.create(player2.position.x + 18, player2.position.y + 25, 'rightSword')
             player2.body.velocity.x = 1000
             canAttack2 = false
         }
 
-        if (aKey.isDown && sKey.isDown){
+        if (cursors.left.isDown && cursors.down.isDown){
             attackLeft2 = leftSword2.create(player2.position.x - 25, player2.position.y + 25, 'leftSword')
             player2.body.velocity.x = -1000
             canAttack2 = false
@@ -343,14 +348,23 @@ function update() {
     }
 
  }
-
-function collectStar (player, star) {
-    
-    // Removes the star from the screen
-    star.kill();
-
-    //  Add and update the score
-    score += 10;
-    scoreText.text = 'Score: ' + score;
-
+function killPlayer (playerOne, target) {
+    playerOne.kill()
+    isAlive = false
 }
+
+function killPlayer2 (playerTwo, target){
+    playerTwo.kill()
+    isAlive2 = false
+}
+
+// function collectStar (player, star) {
+    
+//     // Removes the star from the screen
+//     star.kill();
+
+//     //  Add and update the score
+//     score += 10;
+//     scoreText.text = 'Score: ' + score;
+
+// }
