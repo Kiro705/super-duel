@@ -220,14 +220,6 @@ const DuelOptionState = {
       	if (this.spaceBar.isDown) {
       		this.state.start('PreloadState')
       	}
-          // let selection = this.selectArray[this.selected]
-          // if (selection === 'DUEL'){
-          //     this.state.start('PreloadState')
-          // } else if (selection === 'ADVENTURE'){
-          //     alert('No Adventure Mode yet.')
-          // } else if (selection === 'HOWTO'){
-          //     alert('No How to Play yet.')
-          // }
       }
 
       if (this.selectArray[this.selected] !== 'READY' || this.selectArray[this.selected2] !== 'READY') {

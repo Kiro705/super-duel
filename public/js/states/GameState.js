@@ -4,6 +4,8 @@ const GameState = {
         //environment
         this.gameOver = false
         this.gameOverCounter = 0
+        this.powerLocations = [[80, 40], [700, 40]]
+        this.powerTypeArray = ['SPEED']
 
         //Player 1
         this.attackRight = undefined
@@ -11,6 +13,8 @@ const GameState = {
         this.attackCooldown = 0
         this.canAttack = true
         this.isAlive = true
+        this.speedup = 1
+        this.powerTimer = 0
 
         //Player 2
         this.attackRight2 = undefined
@@ -18,6 +22,8 @@ const GameState = {
         this.attackCooldown2 = 0
         this.canAttack = true
         this.isAlive2 = true
+        this.speedup2 = 1
+        this.powerTimer2 = 0
     },
 
     create: function() {
@@ -89,9 +95,27 @@ const GameState = {
         ledge.scale.setTo(0.5, 0.5)
         ledge.body.immovable = true
 
+        //Creating powerups
+        powerups = game.add.group()
+        powerups.enableBody = true
+
+        var speedup = powerups.create(this.powerLocations[0][0], this.powerLocations[0][1], 'star')
+        speedup.body.gravity.y = 300
+        speedup.powerType = 'SPEED'
+        speedup.body.bounce.y = 1
+
+        speedup = powerups.create(this.powerLocations[1][0], this.powerLocations[1][1], 'star')
+        speedup.body.gravity.y = 300
+        speedup.powerType = 'SPEED'
+        speedup.body.bounce.y = 1
+
         // The player and its settings
         player = game.add.sprite(32, 250, characterArray[character])
+        player.powerOn = undefined
+        player.name = 'p1'
         player2 = game.add.sprite(748, 250, characterArray[character2])
+        player2.powerOn = undefined
+        player.name = 'p2'
 
         //  We need to enable physics on the player
         game.physics.arcade.enable(player)
@@ -128,20 +152,22 @@ const GameState = {
         this.wKey = this.game.input.keyboard.addKey(Phaser.Keyboard.W)
         this.aKey = this.game.input.keyboard.addKey(Phaser.Keyboard.A)
         this.sKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S)
-        this.dKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D)  
+        this.dKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D)
+        this.backspace = this.game.input.keyboard.addKey(Phaser.Keyboard.BACKSPACE)
     },
     update: function(){
         //player 1
-        //  Collide the player and the stars with the platforms
+        //  Collide the player and the powerups with the platforms
         game.physics.arcade.collide(player, platforms)
         game.physics.arcade.collide(player2, platforms)
-        //game.physics.arcade.collide(stars, platforms)
+        game.physics.arcade.collide(powerups, platforms)
 
         //  Checks to see if you got the other player
-        // game.physics.arcade.overlap(rightSword, stars, collectStar, null, this)
+        game.physics.arcade.overlap(player, powerups, getPowerUp, null, this)
         game.physics.arcade.overlap(rightSword, player2, killPlayer2, null, this)
         game.physics.arcade.overlap(leftSword, player2, killPlayer2, null, this)
 
+        game.physics.arcade.overlap(player2, powerups, getPowerUp, null, this)
         game.physics.arcade.overlap(rightSword2, player, killPlayer, null, this)
         game.physics.arcade.overlap(leftSword2, player, killPlayer, null, this)
         //  Reset the players velocity (movement)
@@ -152,17 +178,17 @@ const GameState = {
         //  Move to the left
         if (this.aKey.isDown){
             if (player.body.touching.down){
-               player.body.velocity.x = -150
+               player.body.velocity.x = -150 * this.speedup
             } else {
-                player.body.velocity.x = -75
+                player.body.velocity.x = -75 * this.speedup
             }
             player.animations.play('left')
         //  Move to the right
         } else if (this.dKey.isDown) {
             if (player.body.touching.down){
-               player.body.velocity.x = 150
+               player.body.velocity.x = 150 * this.speedup
             } else {
-                player.body.velocity.x = 75
+                player.body.velocity.x = 75 * this.speedup
             }
             player.animations.play('right')
         } else {
@@ -236,17 +262,17 @@ const GameState = {
         //  Move to the left
         if (this.cursors.left.isDown){
             if (player2.body.touching.down){
-               player2.body.velocity.x = -150
+               player2.body.velocity.x = -150 * this.speedup2
             } else {
-                player2.body.velocity.x = -75
+                player2.body.velocity.x = -75 * this.speedup2
             }
             player2.animations.play('left')
         //  Move to the right
         } else if (this.cursors.right.isDown) {
             if (player2.body.touching.down){
-               player2.body.velocity.x = 150
+               player2.body.velocity.x = 150 * this.speedup2
             } else {
-                player2.body.velocity.x = 75
+                player2.body.velocity.x = 75 * this.speedup2
             }
             player2.animations.play('right')
         } else {
@@ -316,6 +342,40 @@ const GameState = {
             this.attackCooldown2++
         }
 
+        //==============================Powerups!!!! =====================================
+        function getPowerUp(player, powerup) {
+            player.powerOn = 'SPEED'
+            console.log(player, 'got the', powerup.powerType, 'powerup!')
+            powerup.kill()
+        }
+
+        if (player.powerOn) {
+            this.powerTimer++
+            if (player.powerOn === 'SPEED' && this.speedup === 1) {
+                this.speedup = 2
+            }
+        }
+
+        if (this.powerTimer > powerupTimer){
+            player.powerOn = undefined
+            this.speedup = 1
+            this.powerTimer = 0
+        }
+
+        if (player2.powerOn) {
+            this.powerTimer2++
+            if (player2.powerOn === 'SPEED' && this.speedup2 === 1) {
+                this.speedup2 = 2
+            }
+        }
+
+        if (this.powerTimer2 > powerupTimer){
+            player2.powerOn = undefined
+            this.speedup2 = 1
+            this.powerTimer2 = 0
+        }
+
+
         function killPlayer (playerOne, target) {
             despawn = game.add.sprite(playerOne.position.x, playerOne.position.y, 'despawn')
             despawn.animations.add('despawn', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], 10, false)
@@ -361,5 +421,9 @@ const GameState = {
                 this.state.start('PreloadState')
             }
         }
+
+        if (this.backspace.isDown){
+        this.state.start('MenuState')
+      }
     }
 }
