@@ -3,7 +3,7 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO)
 //environment
 var gamesToWin = 3 //3 as a default, can change in game
 var inputDelay = 10 // Delay on menu inputs
-var characterArray = ['Chow', 'EvilChow']
+var characterArray = ['Chow', 'EvilChow', 'Kagu']
 
 //Player 1
 var score = 0

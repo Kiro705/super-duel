@@ -2,9 +2,9 @@ const DuelOptionState = {
 
     preload: function() {
     		//load characters
-    		this.load.spritesheet('Chow', 'assets/Chow.png', 32, 42)
-    		this.load.spritesheet('EvilChow', 'assets/EvilChow.png', 32, 42)
-
+    		for (var i = 0; i < characterArray.length; i++) {
+    			this.load.spritesheet( characterArray[i], 'assets/'+ characterArray[i] + '.png', 32, 42)
+    		}
         //Environment
         this.selected = 0
         this.selected2 = 0
