@@ -90,8 +90,8 @@ const GameState = {
         ledge.body.immovable = true
 
         // The player and its settings
-        player = game.add.sprite(32, 250, 'sprite1')
-        player2 = game.add.sprite(748, 250, 'sprite2')
+        player = game.add.sprite(32, 250, characterArray[character])
+        player2 = game.add.sprite(748, 250, characterArray[character2])
 
         //  We need to enable physics on the player
         game.physics.arcade.enable(player)
