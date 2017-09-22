@@ -22,6 +22,6 @@ var BootState = {
 
     //  A simple background for our game
     this.game.stage.backgroundColor = '#000000'
-    this.state.start('PreloadState')
+    this.state.start('MenuState')
   }
 }

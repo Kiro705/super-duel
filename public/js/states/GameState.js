@@ -48,7 +48,7 @@ const GameState = {
             if (score2 >= i){
                 game.add.sprite(titleSize2 - orbSpaceing2 * i, 16, 'blueOrb')
             } else {
-                game.add.sprite(titleSize2 - orbSpaceing2 * i, 16, 'emptyOrb')
+                game.add.sprite(titleSize2 - orbSpaceing2 * i, 16, 'emptyOrb2')
             }
         }
 
@@ -90,8 +90,8 @@ const GameState = {
         ledge.body.immovable = true
 
         // The player and its settings
-        player = game.add.sprite(32, 250, 'dude2')
-        player2 = game.add.sprite(748, 250, 'dude')
+        player = game.add.sprite(32, 250, 'sprite1')
+        player2 = game.add.sprite(748, 250, 'sprite2')
 
         //  We need to enable physics on the player
         game.physics.arcade.enable(player)
@@ -175,19 +175,19 @@ const GameState = {
         //only if you havent recently jumped
         if(player.body.velocity.y > -75){
             if (player.body.touching.down) {
-                player.doubleJump = true;
+                player.doubleJump = true
             }
 
             if (this.wKey.isDown && !player.body.touching.down){
                 if (player.doubleJump){
-                    player.body.velocity.y = -325;
-                    player.doubleJump = false;
+                    player.body.velocity.y = -325
+                    player.doubleJump = false
                 }
             }
 
             //  Allow the player to jump if they are touching the ground.
             if (this.wKey.isDown && player.body.touching.down){
-                player.body.velocity.y = -450;
+                player.body.velocity.y = -450
             }
         }
 
@@ -208,23 +208,23 @@ const GameState = {
         }
         if (this.attackRight){
             this.attackRight.position.x = player.position.x + 18
-            this.attackRight.position.y = player.position.y + 25
+            this.attackRight.position.y = player.position.y + 19
         }
 
         if (this.attackLeft){
             this.attackLeft.position.x = player.position.x - 25
-            this.attackLeft.position.y = player.position.y + 25
+            this.attackLeft.position.y = player.position.y + 19
         }
 
         if (this.canAttack && this.isAlive){
             if (this.dKey.isDown && this.sKey.isDown){
-                this.attackRight = rightSword.create(player.position.x + 18, player.position.y + 25, 'rightSword')
+                this.attackRight = rightSword.create(player.position.x + 18, player.position.y + 19, 'rightSword')
                 player.body.velocity.x = 1000
                 this.canAttack = false
             }
 
             if (this.aKey.isDown && this.sKey.isDown){
-                this.attackLeft = leftSword.create(player.position.x - 25, player.position.y + 25, 'leftSword')
+                this.attackLeft = leftSword.create(player.position.x - 25, player.position.y + 19, 'leftSword')
                 player.body.velocity.x = -1000
                 this.canAttack = false
             }
@@ -292,23 +292,23 @@ const GameState = {
         }
         if (this.attackRight2){
             this.attackRight2.position.x = player2.position.x + 18
-            this.attackRight2.position.y = player2.position.y + 25
+            this.attackRight2.position.y = player2.position.y + 19
         }
 
         if (this.attackLeft2){
             this.attackLeft2.position.x = player2.position.x - 25
-            this.attackLeft2.position.y = player2.position.y + 25
+            this.attackLeft2.position.y = player2.position.y + 19
         }
 
         if (this.canAttack2 && this.isAlive2){
             if (this.cursors.right.isDown && this.cursors.down.isDown){
-                this.attackRight2 = rightSword2.create(player2.position.x + 18, player2.position.y + 25, 'rightSword')
+                this.attackRight2 = rightSword2.create(player2.position.x + 18, player2.position.y + 19, 'rightSword')
                 player2.body.velocity.x = 1000
                 this.canAttack2 = false
             }
 
             if (this.cursors.left.isDown && this.cursors.down.isDown){
-                this.attackLeft2 = leftSword2.create(player2.position.x - 25, player2.position.y + 25, 'leftSword')
+                this.attackLeft2 = leftSword2.create(player2.position.x - 25, player2.position.y + 19, 'leftSword')
                 player2.body.velocity.x = -1000
                 this.canAttack2 = false
             }
@@ -322,9 +322,7 @@ const GameState = {
             playerOne.kill()
             this.isAlive = false
             score2++
-            if (score2 < gamesToWin){
-                this.gameOver = true
-            }
+            this.gameOver = true
             let titleSize2 = 668
             let orbSpaceing2 = 36
             game.add.sprite(titleSize2 - orbSpaceing2 * score2, 16, 'blueOrb')
@@ -338,9 +336,7 @@ const GameState = {
             playerTwo.kill()
             this.isAlive2 = false
             score++
-            if (score < gamesToWin){
-                this.gameOver = true
-            }
+            this.gameOver = true
             let titleSize = 98
             let orbSpaceing = 36
             game.add.sprite(titleSize + orbSpaceing * score, 16, 'redOrb')
@@ -356,7 +352,14 @@ const GameState = {
             this.gameOverCounter++
         }
         if (this.gameOverCounter > 150){
-            this.state.start('PreloadState')
+            if (score === gamesToWin || score2 === gamesToWin) {
+                game.add.text(118, 50, 'PRESS SPACE TO RETURN TO MENU', {font: '32pt Impact', fill: 'black'})
+                if (this.spaceBar.isDown) {
+                    this.state.start('MenuState')
+                }
+            } else {
+                this.state.start('PreloadState')
+            }
         }
     }
 }
