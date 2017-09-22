@@ -14,6 +14,8 @@ const GameState = {
         this.canAttack = true
         this.isAlive = true
         this.speedup = 1
+        this.sparksRight = undefined
+        this.sparksLeft = undefined
         this.powerTimer = 0
 
         //Player 2
@@ -23,6 +25,8 @@ const GameState = {
         this.canAttack = true
         this.isAlive2 = true
         this.speedup2 = 1
+        this.sparksRight2 = undefined
+        this.sparksLeft2 = undefined
         this.powerTimer2 = 0
     },
 
@@ -115,7 +119,7 @@ const GameState = {
         player.name = 'p1'
         player2 = game.add.sprite(748, 250, characterArray[character2])
         player2.powerOn = undefined
-        player.name = 'p2'
+        player2.name = 'p2'
 
         //  We need to enable physics on the player
         game.physics.arcade.enable(player)
@@ -145,6 +149,9 @@ const GameState = {
         leftSword2 = game.add.group()
         rightSword2.enableBody = true
         leftSword2.enableBody = true
+
+        // Add Sparks
+        speedSparks = game.add.group()
 
         //  Our controls.
         this.cursors = this.game.input.keyboard.createCursorKeys()
@@ -183,6 +190,7 @@ const GameState = {
                 player.body.velocity.x = -75 * this.speedup
             }
             player.animations.play('left')
+
         //  Move to the right
         } else if (this.dKey.isDown) {
             if (player.body.touching.down){
@@ -343,9 +351,13 @@ const GameState = {
         }
 
         //==============================Powerups!!!! =====================================
-        function getPowerUp(player, powerup) {
-            player.powerOn = 'SPEED'
-            console.log(player, 'got the', powerup.powerType, 'powerup!')
+        function getPowerUp(thePlayer, powerup) {
+            thePlayer.powerOn = 'SPEED'
+            if (thePlayer.name === 'p1'){
+                this.powerTimer = 0
+            } else if (thePlayer.name === 'p2'){
+                this.powerTimer2 = 0
+            }
             powerup.kill()
         }
 
@@ -360,6 +372,52 @@ const GameState = {
             player.powerOn = undefined
             this.speedup = 1
             this.powerTimer = 0
+            if (this.sparksRight){
+                this.sparksRight.kill()
+                this.sparksRight = undefined
+            }
+            if (this.sparksLeft){
+                this.sparksLeft.kill()
+                this.sparksLeft = undefined
+            }
+        }
+        //==============================SPEED UP!!!! =====================================
+        if (this.speedup === 2) {
+            if (player.body.velocity.x > 0 && !this.sparksLeft) {
+                if (this.sparksRight){
+                    this.sparksRight.kill()
+                    this.sparksRight = undefined
+                }
+                this.sparksLeft = speedSparks.create(player.position.x - 19, player.position.y + 14, 'leftSparks')
+                this.sparksLeft.animations.add('sparking', [0, 1, 2, 3], 10, true)
+            }
+            if (player.body.velocity.x < 0 && !this.sparksRight){
+                if (this.sparksLeft){
+                    this.sparksLeft.kill()
+                    this.sparksLeft = undefined
+                }
+                this.sparksRight = speedSparks.create(player.position.x + 19, player.position.y + 14, 'rightSparks')
+                this.sparksRight.animations.add('sparking', [0, 1, 2, 3], 10, true)
+            }
+            if (this.sparksRight) {
+                this.sparksRight.animations.play('sparking')
+                this.sparksRight.position.x = player.position.x + 19
+                this.sparksRight.position.y = player.position.y + 14
+            } else if (this.sparksLeft) {
+                this.sparksLeft.animations.play('sparking')
+                this.sparksLeft.position.x = player.position.x - 19
+                this.sparksLeft.position.y = player.position.y + 14
+            }
+            if (player.body.velocity.x === 0){
+                if (this.sparksLeft){
+                    this.sparksLeft.kill()
+                    this.sparksLeft = undefined
+                } else if (this.sparksRight){
+                    this.sparksRight.kill()
+                    this.sparksRight = undefined
+                }
+            }
+
         }
 
         if (player2.powerOn) {
@@ -373,9 +431,55 @@ const GameState = {
             player2.powerOn = undefined
             this.speedup2 = 1
             this.powerTimer2 = 0
+            if (this.sparksRight2){
+                this.sparksRight2.kill()
+                this.sparksRight2 = undefined
+            }
+            if (this.sparksLeft2){
+                this.sparksLeft2.kill()
+                this.sparksLeft2 = undefined
+            }
         }
 
+        if (this.speedup2 === 2) {
+            if (player2.body.velocity.x > 0 && !this.sparksLeft2) {
+                if (this.sparksRight2){
+                    this.sparksRight2.kill()
+                    this.sparksRight2 = undefined
+                }
+                this.sparksLeft2 = speedSparks.create(player2.position.x - 19, player2.position.y + 14, 'leftSparks')
+                this.sparksLeft2.animations.add('sparking', [0, 1, 2, 3], 10, true)
+            }
+            if (player2.body.velocity.x < 0 && !this.sparksRight2){
+                if (this.sparksLeft2){
+                    this.sparksLeft2.kill()
+                    this.sparksLeft2 = undefined
+                }
+                this.sparksRight2 = speedSparks.create(player2.position.x + 19, player2.position.y + 14, 'rightSparks')
+                this.sparksRight2.animations.add('sparking', [0, 1, 2, 3], 10, true)
+            }
+            if (this.sparksRight2) {
+                this.sparksRight2.animations.play('sparking')
+                this.sparksRight2.position.x = player2.position.x + 19
+                this.sparksRight2.position.y = player2.position.y + 14
+            } else if (this.sparksLeft2) {
+                this.sparksLeft2.animations.play('sparking')
+                this.sparksLeft2.position.x = player2.position.x - 19
+                this.sparksLeft2.position.y = player2.position.y + 14
+            }
+            if (player2.body.velocity.x === 0){
+                if (this.sparksLeft2){
+                    this.sparksLeft2.kill()
+                    this.sparksLeft2 = undefined
+                } else if (this.sparksRight2){
+                    this.sparksRight2.kill()
+                    this.sparksRight2 = undefined
+                }
+            }
 
+        }
+
+            //==============================DEATH AND GAME OVER!!!! =====================================
         function killPlayer (playerOne, target) {
             despawn = game.add.sprite(playerOne.position.x, playerOne.position.y, 'despawn')
             despawn.animations.add('despawn', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], 10, false)
