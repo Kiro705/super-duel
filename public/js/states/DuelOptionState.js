@@ -5,7 +5,7 @@ const DuelOptionState = {
     		this.load.spritesheet('Chow', 'assets/Chow.png', 32, 42)
     		this.load.spritesheet('EvilChow', 'assets/EvilChow.png', 32, 42)
 
-        //environment
+        //Environment
         this.selected = 0
         this.selected2 = 0
         this.selectArray = ['CHARACTER', 'READY']
