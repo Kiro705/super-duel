@@ -3,6 +3,7 @@ var PreloadState = {
 	preload: function(){
     this.load.image('ground', 'assets/platform.png')
     this.load.image('star', 'assets/star.png')
+    this.load.image('megaswordPowerup', 'assets/megaswordPowerup.png')
     this.load.image('title1', 'assets/Player1Title.png')
     this.load.image('title2', 'assets/Player2Title.png')
 	this.load.image('emptyOrb', 'assets/emptyWin1.png')
@@ -12,6 +13,8 @@ var PreloadState = {
     this.load.spritesheet('despawn', 'assets/despawn.png', 27, 36)
     this.load.spritesheet('rightSword', 'assets/rightSword.png', 42, 18)
     this.load.spritesheet('leftSword', 'assets/leftSword.png', 42, 18)
+    this.load.spritesheet('megaRight', 'assets/megaswordRight.png', 84, 21)
+    this.load.spritesheet('megaLeft', 'assets/megaswordLeft.png', 84, 21)
     this.load.spritesheet('leftSparks', 'assets/speedupRight.png', 32, 32)
     this.load.spritesheet('rightSparks', 'assets/speedupLeft.png', 32, 32)
     //spritePlane to turn gif into a spreadsheet

@@ -6,6 +6,8 @@ const GameState = {
         this.gameOverCounter = 0
         this.powerLocations = [[80, 40], [700, 40]]
         this.powerTypeArray = ['SPEED']
+        this.megaswordTimer = 0
+        this.isMegasword = false
 
         //Player 1
         this.attackRight = undefined
@@ -17,6 +19,8 @@ const GameState = {
         this.sparksRight = undefined
         this.sparksLeft = undefined
         this.powerTimer = 0
+        this.rightAttack = 'rightSword'
+        this.leftAttack = 'leftSword'
 
         //Player 2
         this.attackRight2 = undefined
@@ -28,6 +32,8 @@ const GameState = {
         this.sparksRight2 = undefined
         this.sparksLeft2 = undefined
         this.powerTimer2 = 0
+        this.rightAttack2 = 'rightSword'
+        this.leftAttack2 = 'leftSword'
     },
 
     create: function() {
@@ -246,19 +252,19 @@ const GameState = {
         }
 
         if (this.attackLeft){
-            this.attackLeft.position.x = player.position.x - 25
+            this.attackLeft.position.x = player.position.x - (25 + megaAdd)
             this.attackLeft.position.y = player.position.y + 19
         }
 
         if (this.canAttack && this.isAlive){
-            if (this.dKey.isDown && this.sKey.isDown){
-                this.attackRight = rightSword.create(player.position.x + 18, player.position.y + 19, 'rightSword')
+            if (this.dKey.isDown && this.sKey.isDown && !this.aKey.isDown){
+                this.attackRight = rightSword.create(player.position.x + 18, player.position.y + 19, this.rightAttack)
                 player.body.velocity.x = 1000
                 this.canAttack = false
             }
 
             if (this.aKey.isDown && this.sKey.isDown){
-                this.attackLeft = leftSword.create(player.position.x - 25, player.position.y + 19, 'leftSword')
+                this.attackLeft = leftSword.create(player.position.x - (25 + megaAdd), player.position.y + 19, this.leftAttack)
                 player.body.velocity.x = -1000
                 this.canAttack = false
             }
@@ -330,19 +336,19 @@ const GameState = {
         }
 
         if (this.attackLeft2){
-            this.attackLeft2.position.x = player2.position.x - 25
+            this.attackLeft2.position.x = player2.position.x - (25 + megaAdd2)
             this.attackLeft2.position.y = player2.position.y + 19
         }
 
         if (this.canAttack2 && this.isAlive2){
-            if (this.cursors.right.isDown && this.cursors.down.isDown){
-                this.attackRight2 = rightSword2.create(player2.position.x + 18, player2.position.y + 19, 'rightSword')
+            if (this.cursors.right.isDown && this.cursors.down.isDown && !this.cursors.left.isDown){
+                this.attackRight2 = rightSword2.create(player2.position.x + 18, player2.position.y + 19, this.rightAttack2)
                 player2.body.velocity.x = 1000
                 this.canAttack2 = false
             }
 
             if (this.cursors.left.isDown && this.cursors.down.isDown){
-                this.attackLeft2 = leftSword2.create(player2.position.x - 25, player2.position.y + 19, 'leftSword')
+                this.attackLeft2 = leftSword2.create(player2.position.x - (25 + megaAdd2), player2.position.y + 19, this.leftAttack2)
                 player2.body.velocity.x = -1000
                 this.canAttack2 = false
             }
@@ -352,7 +358,7 @@ const GameState = {
 
         //==============================Powerups!!!! =====================================
         function getPowerUp(thePlayer, powerup) {
-            thePlayer.powerOn = 'SPEED'
+            thePlayer.powerOn = powerup.powerType
             if (thePlayer.name === 'p1'){
                 this.powerTimer = 0
             } else if (thePlayer.name === 'p2'){
@@ -365,6 +371,10 @@ const GameState = {
             this.powerTimer++
             if (player.powerOn === 'SPEED' && this.speedup === 1) {
                 this.speedup = 2
+            } else if (player.powerOn === 'MEGASWORD' && this.rightAttack === 'rightSword') {
+                this.rightAttack = 'megaRight'
+                this.leftAttack = 'megaLeft'
+                megaAdd = 42
             }
         }
 
@@ -372,6 +382,9 @@ const GameState = {
             player.powerOn = undefined
             this.speedup = 1
             this.powerTimer = 0
+            this.rightAttack = 'rightSword'
+            this.leftAttack = 'leftSword'
+            megaAdd = 0
             if (this.sparksRight){
                 this.sparksRight.kill()
                 this.sparksRight = undefined
@@ -424,6 +437,10 @@ const GameState = {
             this.powerTimer2++
             if (player2.powerOn === 'SPEED' && this.speedup2 === 1) {
                 this.speedup2 = 2
+            } else if (player2.powerOn === 'MEGASWORD' && this.rightAttack2 === 'rightSword') {
+                this.rightAttack2 = 'megaRight'
+                this.leftAttack2 = 'megaLeft'
+                megaAdd2 = 42
             }
         }
 
@@ -431,6 +448,9 @@ const GameState = {
             player2.powerOn = undefined
             this.speedup2 = 1
             this.powerTimer2 = 0
+            this.rightAttack2 = 'rightSword'
+            this.leftAttack2 = 'leftSword'
+            megaAdd2 = 0
             if (this.sparksRight2){
                 this.sparksRight2.kill()
                 this.sparksRight2 = undefined
@@ -478,8 +498,24 @@ const GameState = {
             }
 
         }
+        //==============================MEGASWORD ===================================================
+        if (!this.isMegasword) {
+            this.megaswordTimer++
+        }
+        //Spawn the sword
+        if (this.megaswordTimer > megaswordSpawn) {
+            this.megaswordTimer = 0
+            this.isMegasword = true
+            theSword = powerups.create(400, 100, 'megaswordPowerup')
+            theSword.body.gravity.y = 100
+            theSword.powerType = 'MEGASWORD'
+            theSword.body.bounce.y = 1
+        }
 
-            //==============================DEATH AND GAME OVER!!!! =====================================
+
+
+
+        //==============================DEATH AND GAME OVER!!!! =====================================
         function killPlayer (playerOne, target) {
             despawn = game.add.sprite(playerOne.position.x, playerOne.position.y, 'despawn')
             despawn.animations.add('despawn', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], 10, false)

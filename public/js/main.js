@@ -4,17 +4,20 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO)
 var gamesToWin = 3 //3 as a default, can change in game
 var inputDelay = 10 // Delay on menu inputs
 var powerupTimer = 400 // How long powerups last
+var megaswordSpawn = 1200 //How long until the Megasword appears
 var characterArray = ['Chow', 'EvilChow', 'Kagu']
 
 //Player 1
 var score = 0
 var character = 0
 var weapon = 0
+var megaAdd = 0 //Adjust Megasword left attack(Turns to 42px)
 
 //Player 2
 var score2 = 0
 var character2 = 1
 var weapon2 = 0
+var megaAdd2 = 0 //Adjust Megasword left attack(Turns to 42px)
 
 
 game.state.add('GameState', GameState)
