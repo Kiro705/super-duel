@@ -4,8 +4,10 @@ const GameState = {
         //environment
         this.gameOver = false
         this.gameOverCounter = 0
-        this.powerLocations = [[80, 40], [700, 40], [80, 430], [700, 430], [400, 100]]
-        this.occupied = [1, 1, 0, 0, 0]
+        this.powerLocations = [[80, 40], [700, 40], [80, 430], [700, 430], [384, 100]]
+        this.platformLocations = [[350, 250], [275, 430], [425, 430], [0, 450], [700, 450], [150, 345], [550, 345], [0, 240], [700, 240], [50, 120], [650, 120]]
+        this.pillarLocations = [[250, 150], [525, 150]]
+        this.occupied = [0, 0, 0, 0, 0]
         this.powerTypeArray = ['SPEED', 'FLOAT']
         this.megaswordTimer = 0
         this.isMegasword = false
@@ -26,6 +28,7 @@ const GameState = {
         this.powerTimer = 0
         this.rightAttack = 'rightSword'
         this.leftAttack = 'leftSword'
+        megaAdd = 0
 
         //Player 2
         this.attackRight2 = undefined
@@ -39,6 +42,7 @@ const GameState = {
         this.powerTimer2 = 0
         this.rightAttack2 = 'rightSword'
         this.leftAttack2 = 'leftSword'
+        megaAdd2 = 0
     },
 
     create: function() {
@@ -80,47 +84,48 @@ const GameState = {
         platforms.enableBody = true
 
         // Here we create the ground.
-        var ground = platforms.create(0, game.world.height - 70, 'ground')
+        var ground = platforms.create(0, game.world.height - 50, 'ground')
 
         //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
         //setTo(length, height)
-        ground.scale.setTo(2, 2.5)
+        ground.scale.setTo(2, 2)
 
         //  This stops it from falling away when you jump on it
         ground.body.immovable = true
 
         //  Create Ledges create(shift left, shift down, group)
-        var ledge = platforms.create(600, 400, 'ground')
-        ledge.scale.setTo(0.5, 0.5)
-        ledge.body.immovable = true
+        this.pillarLocations.forEach(location => {
+            let ledge = platforms.create(location[0], location[1], 'pillar')
+            // ledge.scale.setTo(0.5, 0.5)
+            ledge.body.immovable = true
+        })
 
-        ledge = platforms.create(0, 400, 'ground')
-        ledge.scale.setTo(0.5, 0.5)
-        ledge.body.immovable = true
+        this.platformLocations.forEach(location => {
+            let ledge = platforms.create(location[0], location[1], 'platform')
+            ledge.body.immovable = true
+        })
 
-        ledge = platforms.create(0, 150, 'ground')
-        ledge.scale.setTo(0.5, 0.5)
-        ledge.body.immovable = true
+        // ledge = platforms.create(0, 400, 'ground')
+        // ledge.scale.setTo(0.5, 0.5)
+        // ledge.body.immovable = true
 
-        ledge = platforms.create(600, 150, 'ground')
-        ledge.scale.setTo(0.5, 0.5)
-        ledge.body.immovable = true
+        // ledge = platforms.create(0, 150, 'ground')
+        // ledge.scale.setTo(0.5, 0.5)
+        // ledge.body.immovable = true
 
-        ledge = platforms.create(300, 275, 'ground')
-        ledge.scale.setTo(0.5, 0.5)
-        ledge.body.immovable = true
+        // ledge = platforms.create(600, 150, 'ground')
+        // ledge.scale.setTo(0.5, 0.5)
+        // ledge.body.immovable = true
+
+        // ledge = platforms.create(300, 275, 'ground')
+        // ledge.scale.setTo(0.5, 0.5)
+        // ledge.body.immovable = true
 
         //Creating powerups
         powerups = game.add.group()
         powerups.enableBody = true
 
-        var speedup = powerups.create(this.powerLocations[0][0], this.powerLocations[0][1], 'FLOAT')
-        speedup.body.gravity.y = 300
-        speedup.powerType = 'FLOAT'
-        speedup.body.bounce.y = 1
-        this.powerUpCount++
-
-        speedup = powerups.create(this.powerLocations[1][0], this.powerLocations[1][1], 'SPEED')
+        var speedup = powerups.create(384, 425, 'SPEED')
         speedup.body.gravity.y = 300
         speedup.powerType = 'SPEED'
         speedup.body.bounce.y = 1
@@ -374,6 +379,10 @@ const GameState = {
             this.powerUpSpawn = 0
             let type = this.powerTypeArray[Math.floor(Math.random() * 2)]
             let location = this.powerLocations[Math.floor(Math.random() * 4)]
+            //so two powerups arn not in the same spot
+            while (this.occupied[location] === 1) {
+                location = this.powerLocations[Math.floor(Math.random() * 4)]
+            }
             let newPowerUp = powerups.create(location[0], location[1], type)
             newPowerUp.body.gravity.y = 300
             newPowerUp.powerType = type
