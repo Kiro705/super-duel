@@ -2,7 +2,9 @@ var PreloadState = {
 
 	preload: function(){
     this.load.image('ground', 'assets/platform.png')
-    this.load.image('star', 'assets/star.png')
+    this.load.image('SPEED', 'assets/speedUp.png')
+    this.load.image('FLOAT', 'assets/float.png')
+    this.load.image('SLOWDOWN', 'assets/slowDown.png')
     this.load.image('megaswordPowerup', 'assets/megaswordPowerup.png')
     this.load.image('title1', 'assets/Player1Title.png')
     this.load.image('title2', 'assets/Player2Title.png')

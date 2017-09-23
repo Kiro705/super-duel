@@ -3,8 +3,10 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO)
 //environment
 var gamesToWin = 3 //3 as a default, can change in game
 var inputDelay = 10 // Delay on menu inputs
-var powerupTimer = 400 // How long powerups last
+var powerupTimer = 400 // How long powerups last on players
+var powerupsSpawn = 700 // How often powerups spawn
 var megaswordSpawn = 1200 //How long until the Megasword appears
+var floatAmount = 300 //How much gravity changes to
 var characterArray = ['Chow', 'EvilChow', 'Kagu']
 
 //Player 1

@@ -4,10 +4,15 @@ const GameState = {
         //environment
         this.gameOver = false
         this.gameOverCounter = 0
-        this.powerLocations = [[80, 40], [700, 40]]
-        this.powerTypeArray = ['SPEED']
+        this.powerLocations = [[80, 40], [700, 40], [80, 430], [700, 430], [400, 100]]
+        this.occupied = [1, 1, 0, 0, 0]
+        this.powerTypeArray = ['SPEED', 'FLOAT']
         this.megaswordTimer = 0
         this.isMegasword = false
+        this.powerUpCount = 0
+        this.powerUpSpawn = 0
+        this.floatCounter = 0
+        this.floatOn = false
 
         //Player 1
         this.attackRight = undefined
@@ -109,15 +114,17 @@ const GameState = {
         powerups = game.add.group()
         powerups.enableBody = true
 
-        var speedup = powerups.create(this.powerLocations[0][0], this.powerLocations[0][1], 'star')
+        var speedup = powerups.create(this.powerLocations[0][0], this.powerLocations[0][1], 'FLOAT')
         speedup.body.gravity.y = 300
-        speedup.powerType = 'SPEED'
+        speedup.powerType = 'FLOAT'
         speedup.body.bounce.y = 1
+        this.powerUpCount++
 
-        speedup = powerups.create(this.powerLocations[1][0], this.powerLocations[1][1], 'star')
+        speedup = powerups.create(this.powerLocations[1][0], this.powerLocations[1][1], 'SPEED')
         speedup.body.gravity.y = 300
         speedup.powerType = 'SPEED'
         speedup.body.bounce.y = 1
+        this.powerUpCount++
 
         // The player and its settings
         player = game.add.sprite(32, 250, characterArray[character])
@@ -357,8 +364,31 @@ const GameState = {
         }
 
         //==============================Powerups!!!! =====================================
+        //spawn new powerups
+        if(this.powerUpCount < 2){
+            this.powerUpSpawn++
+        }
+
+        if(this.powerUpSpawn > powerupsSpawn){
+            this.powerUpCount++
+            this.powerUpSpawn = 0
+            let type = this.powerTypeArray[Math.floor(Math.random() * 2)]
+            let location = this.powerLocations[Math.floor(Math.random() * 4)]
+            let newPowerUp = powerups.create(location[0], location[1], type)
+            newPowerUp.body.gravity.y = 300
+            newPowerUp.powerType = type
+            newPowerUp.body.bounce.y = 1
+        }
+
         function getPowerUp(thePlayer, powerup) {
+            this.powerUpCount--
             thePlayer.powerOn = powerup.powerType
+            if (powerup.powerType === 'FLOAT') {
+                this.floatOn = true
+                this.floatCounter = 0
+                player.body.gravity.y = floatAmount
+                player2.body.gravity.y = floatAmount
+            }
             if (thePlayer.name === 'p1'){
                 this.powerTimer = 0
             } else if (thePlayer.name === 'p2'){
@@ -498,6 +528,17 @@ const GameState = {
             }
 
         }
+        //==============================FLOAT ===================================================
+        if (this.floatOn) {
+            this.floatCounter++
+        }
+
+        if (this.floatCounter > powerupTimer) {
+            player.body.gravity.y = 1000
+            player2.body.gravity.y = 1000
+            floatOn = false
+            floatCounter = 0
+        }
         //==============================MEGASWORD ===================================================
         if (!this.isMegasword) {
             this.megaswordTimer++
@@ -506,10 +547,11 @@ const GameState = {
         if (this.megaswordTimer > megaswordSpawn) {
             this.megaswordTimer = 0
             this.isMegasword = true
-            theSword = powerups.create(400, 100, 'megaswordPowerup')
+            theSword = powerups.create(this.powerLocations[4][0], this.powerLocations[4][1], 'megaswordPowerup')
             theSword.body.gravity.y = 100
             theSword.powerType = 'MEGASWORD'
             theSword.body.bounce.y = 1
+            this.powerUpCount++
         }
 
 
