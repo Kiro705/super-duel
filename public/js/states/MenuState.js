@@ -67,7 +67,7 @@ const MenuState = {
             } else if (selection === 'ADVENTURE'){
                 alert('No Adventure Mode yet.')
             } else if (selection === 'HOWTO'){
-                alert('No How to Play yet.')
+                this.state.start('HowToPlayState')
             }
         }
     }
