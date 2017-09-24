@@ -11,6 +11,7 @@ const MenuState = {
         this.moveCounter = 0
         this.shadowX = 223
         this.shadowY = 303
+        this.adventureCheck = false
     },
 
     create: function() {
@@ -39,12 +40,27 @@ const MenuState = {
         this.wKey = this.game.input.keyboard.addKey(Phaser.Keyboard.W)
         this.aKey = this.game.input.keyboard.addKey(Phaser.Keyboard.A)
         this.sKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S)
-        this.dKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D)  
+        this.dKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D)
+
+        //xbox 360 controller setup
+        game.input.gamepad.start()
+        pad1 = game.input.gamepad.pad1
+        // console.log(game.input)
+
+        // if (game.input.gamepad.supported && game.input.gamepad.active && pad1.connected) {
+        //     console.log('Controller is connected!');
+        // } else {
+        //     console.log('controller not connected :(')
+        //     console.log('suported:', game.input.gamepad.supported, 'active:', game.input.gamepad.active, 'connected:', pad1.connected)
+        // }
     },
     update: function(){
+        // if (pad1.isDown(Phaser.Gamepad.XBOX360_DPAD_UP) || pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) < -0.1) {
+        //     console.log(pad1)
+        // }
 
         //Select Mode
-        if (this.wKey.isDown || this.cursors.up.isDown){
+        if (this.wKey.isDown || this.cursors.up.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_DPAD_UP) || pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) < -0.1){
             if (this.canMove && this.selectArray[this.selected] !== 'DUEL'){
                 arrow.position.y -= 75
                 this.selected--
@@ -54,8 +70,8 @@ const MenuState = {
                 this.canMove = false
             }
         }
-        if (this.sKey.isDown || this.cursors.down.isDown){
-            if (this.canMove && this.selectArray[this.selected] !== 'HOWTO'){
+        if (this.sKey.isDown || this.cursors.down.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_DPAD_DOWN) || pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) > 0.1){
+            if (this.canMove && this.selectArray[this.selected] !== 'HOW TO PLAY'){
                 arrow.position.y += 75
                 this.selected++
                 shadow.destroy()
@@ -75,12 +91,13 @@ const MenuState = {
         }
 
         //Start mode
-        if (this.spaceBar.isDown || this.enter.isDown){
+        if (this.spaceBar.isDown || this.enter.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_A)){
             let selection = this.selectArray[this.selected]
             if (selection === 'DUEL'){
                 this.state.start('DuelOptionState')
-            } else if (selection === 'ADVENTURE'){
-                alert('No Adventure Mode yet.')
+            } else if (selection === 'ADVENTURE' && !this.adventureCheck){
+                game.add.text(500, 400, 'NO ADVENTURE MODE YET', {font: '14pt Ariel', fill: 'gray'})
+                this.adventureCheck = true
             } else if (selection === 'HOW TO PLAY'){
                 this.state.start('HowToPlayState')
             }

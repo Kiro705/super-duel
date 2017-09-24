@@ -265,7 +265,7 @@ const GameState = {
 
     // ==============================PLAYER 2 SET UP =====================================
         //  Move to the left
-        if (this.cursors.left.isDown){
+        if (this.cursors.left.isDown || pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) < -0.1){
             if (player2.body.touching.down){
                player2.body.velocity.x = -150 * this.speedup2
             } else {
@@ -273,7 +273,7 @@ const GameState = {
             }
             player2.animations.play('left')
         //  Move to the right
-        } else if (this.cursors.right.isDown) {
+        } else if (this.cursors.right.isDown || pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) > 0.1) {
             if (player2.body.touching.down){
                player2.body.velocity.x = 150 * this.speedup2
             } else {
@@ -293,7 +293,7 @@ const GameState = {
                 player2.doubleJump2 = true
             }
 
-            if (this.cursors.up.isDown && !player2.body.touching.down){
+            if ((this.cursors.up.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_A)) && !player2.body.touching.down){
                 if (player2.doubleJump2){
                     player2.body.velocity.y = -325
                     player2.doubleJump2 = false
@@ -301,7 +301,7 @@ const GameState = {
             }
 
             //  Allow the player to jump if they are touching the ground.
-            if (this.cursors.up.isDown && player2.body.touching.down){
+            if ((this.cursors.up.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_A)) && player2.body.touching.down){
                 player2.body.velocity.y = -450
             }
         }
@@ -332,13 +332,13 @@ const GameState = {
         }
 
         if (this.canAttack2 && this.isAlive2){
-            if (this.cursors.right.isDown && this.cursors.down.isDown && !this.cursors.left.isDown){
+            if ((this.cursors.right.isDown && this.cursors.down.isDown && !this.cursors.left.isDown) || pad1.isDown(Phaser.Gamepad.XBOX360_RIGHT_TRIGGER)){
                 this.attackRight2 = rightSword2.create(player2.position.x + 18, player2.position.y + 19, this.rightAttack2)
                 player2.body.velocity.x = 1000
                 this.canAttack2 = false
             }
 
-            if (this.cursors.left.isDown && this.cursors.down.isDown){
+            if ((this.cursors.left.isDown && this.cursors.down.isDown) || pad1.isDown(Phaser.Gamepad.XBOX360_LEFT_TRIGGER)){
                 this.attackLeft2 = leftSword2.create(player2.position.x - (27 + megaAdd2), player2.position.y + 19, this.leftAttack2)
                 player2.body.velocity.x = -1000
                 this.canAttack2 = false
@@ -593,7 +593,7 @@ const GameState = {
             if (score === gamesToWin || score2 === gamesToWin) {
                 game.add.text(116, 48, 'PRESS SPACE TO RETURN TO MENU', {font: '32pt Impact', fill: 'white'})
                 game.add.text(118, 50, 'PRESS SPACE TO RETURN TO MENU', {font: '32pt Impact', fill: 'black'})
-                if (this.spaceBar.isDown) {
+                if (this.spaceBar.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_A)) {
                     this.state.start('MenuState')
                 }
             } else {

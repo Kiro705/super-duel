@@ -13,6 +13,7 @@ var pillarLocations = []
 var platformLocations = []
 var spawnLocations = []
 var mapChoice = 0
+var pad1
 
 //Player 1
 var score = 0

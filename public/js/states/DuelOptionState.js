@@ -174,8 +174,8 @@ const DuelOptionState = {
           this.moveCounter2 = 0
       }
       //Character select
-			if (this.selectArray[this.selected2] === 'CHARACTER'){
-				if (this.cursors.right.isDown && this.canMove2){
+			if (this.selectArray[this.selected2] === 'CHARACTER' && this.canMove2){
+				if (this.cursors.right.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_DPAD_RIGHT) || pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) > 0.1) {
 					if (character2 === characterArray.length - 1) {
 						character2 = 0
 					} else {
@@ -187,10 +187,7 @@ const DuelOptionState = {
 					this.makeCharacter2()
 					this.canMove2 = false
 				}
-			}
-
-			if (this.selectArray[this.selected2] === 'CHARACTER'){
-				if (this.cursors.left.isDown && this.canMove2){
+				if (this.cursors.left.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_DPAD_LEFT) || pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) < -0.1){
 					if (character2 === 0) {
 						character2 = characterArray.length - 1
 					} else {
@@ -205,19 +202,21 @@ const DuelOptionState = {
 			}
 
 			//Menu Select
-			if (this.cursors.up.isDown && this.canMove2) {
-				if (this.selectArray[this.selected2] !== 'CHARACTER') {
-					this.selected2--
-					this.moveArrow2()
-					this.canMove2 = false
+			if(this.canMove2){
+				if (this.cursors.up.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_DPAD_UP) || pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) < -0.1) {
+					if (this.selectArray[this.selected2] !== 'CHARACTER') {
+						this.selected2--
+						this.moveArrow2()
+						this.canMove2 = false
+					}
 				}
-			}
 
-			if (this.cursors.down.isDown && this.canMove2) {
-				if (this.selectArray[this.selected2] !== 'READY') {
-					this.selected2++
-					this.moveArrow2()
-					this.canMove2 = false
+				if (this.cursors.down.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_DPAD_DOWN) || pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) > 0.1) {
+					if (this.selectArray[this.selected2] !== 'READY') {
+						this.selected2++
+						this.moveArrow2()
+						this.canMove2 = false
+					}
 				}
 			}
 
@@ -226,7 +225,7 @@ const DuelOptionState = {
       	if (!this.isReady) {
       		this.isReady = game.add.text(332, 502, 'READY', {font: '42pt Impact', fill: 'gold'})
       	}
-      	if (this.spaceBar.isDown || this.enter.isDown) {
+      	if (this.spaceBar.isDown || this.enter.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_A)) {
       		this.state.start('PreloadState')
       	}
       }
