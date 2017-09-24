@@ -71,6 +71,7 @@ const DuelOptionState = {
         //  Our controls.
         this.cursors = this.game.input.keyboard.createCursorKeys()
         this.spaceBar = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
+        this.enter = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER)
         this.wKey = this.game.input.keyboard.addKey(Phaser.Keyboard.W)
         this.aKey = this.game.input.keyboard.addKey(Phaser.Keyboard.A)
         this.sKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S)
@@ -225,7 +226,7 @@ const DuelOptionState = {
       	if (!this.isReady) {
       		this.isReady = game.add.text(332, 502, 'READY', {font: '42pt Impact', fill: 'gold'})
       	}
-      	if (this.spaceBar.isDown) {
+      	if (this.spaceBar.isDown || this.enter.isDown) {
       		this.state.start('PreloadState')
       	}
       }

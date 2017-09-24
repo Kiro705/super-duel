@@ -34,6 +34,7 @@ const MenuState = {
 
         //  Our controls.
         this.cursors = this.game.input.keyboard.createCursorKeys()
+        this.enter = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER)
         this.spaceBar = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
         this.wKey = this.game.input.keyboard.addKey(Phaser.Keyboard.W)
         this.aKey = this.game.input.keyboard.addKey(Phaser.Keyboard.A)
@@ -74,7 +75,7 @@ const MenuState = {
         }
 
         //Start mode
-        if (this.spaceBar.isDown){
+        if (this.spaceBar.isDown || this.enter.isDown){
             let selection = this.selectArray[this.selected]
             if (selection === 'DUEL'){
                 this.state.start('DuelOptionState')
