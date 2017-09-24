@@ -106,9 +106,9 @@ const GameState = {
         powerups.enableBody = true
 
         //Starting Speed power up
-        var speedup = powerups.create(powerLocations[5][0], powerLocations[5][1], 'FLOAT')
+        var speedup = powerups.create(powerLocations[5][0], powerLocations[5][1], 'SPEED')
         speedup.body.gravity.y = 300
-        speedup.powerType = 'FLOAT'
+        speedup.powerType = 'SPEED'
         speedup.body.bounce.y = 1
         this.powerUpCount++
 
