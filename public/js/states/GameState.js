@@ -560,6 +560,8 @@ const GameState = {
             let titleSize2 = 668
             let orbSpaceing2 = 36
             game.add.sprite(titleSize2 - orbSpaceing2 * score2, 16, 'blueOrb')
+            game.add.text(52, 97, 'PLAYER TWO', {font: '108pt Impact', fill: 'white'})
+            game.add.text(232, 297, 'WINS', {font: '108pt Impact', fill: 'white'})
             game.add.text(55, 100, 'PLAYER TWO', {font: '108pt Impact', fill: 'black'})
             game.add.text(235, 300, 'WINS', {font: '108pt Impact', fill: 'black'})
         }
@@ -574,6 +576,8 @@ const GameState = {
             let titleSize = 98
             let orbSpaceing = 36
             game.add.sprite(titleSize + orbSpaceing * score, 16, 'redOrb')
+            game.add.text(52, 97, 'PLAYER ONE', {font: '108pt Impact', fill: 'white'})
+            game.add.text(232, 297, 'WINS', {font: '108pt Impact', fill: 'white'})
             game.add.text(55, 100, 'PLAYER ONE', {font: '108pt Impact', fill: 'black'})
             game.add.text(235, 300, 'WINS', {font: '108pt Impact', fill: 'black'})
         }
@@ -587,6 +591,7 @@ const GameState = {
         }
         if (this.gameOverCounter > 150){
             if (score === gamesToWin || score2 === gamesToWin) {
+                game.add.text(116, 48, 'PRESS SPACE TO RETURN TO MENU', {font: '32pt Impact', fill: 'white'})
                 game.add.text(118, 50, 'PRESS SPACE TO RETURN TO MENU', {font: '32pt Impact', fill: 'black'})
                 if (this.spaceBar.isDown) {
                     this.state.start('MenuState')

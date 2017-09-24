@@ -3,12 +3,14 @@ const MenuState = {
     preload: function() {
         //environment
         this.selected = 0
-        this.selectArray = ['DUEL', 'ADVENTURE', 'HOWTO']
+        this.selectArray = ['DUEL', 'ADVENTURE', 'HOW TO PLAY']
         this.load.image('title', 'assets/title.png')
         this.load.image('city', 'assets/city_sunset.png')
         this.load.image('arrow', 'assets/arrow.png')
         this.canMove = true
         this.moveCounter = 0
+        this.shadowX = 223
+        this.shadowY = 303
     },
 
     create: function() {
@@ -16,7 +18,8 @@ const MenuState = {
         this.background = this.add.tileSprite(0, 0,  this.game.world.width, this.game.world.height, 'city')
         game.add.image(180, 30, 'title')
         //game.add.text(65, 60, 'SUPER DUEL', {font: '108pt Impact', fill: 'black'})
-        game.add.text(220, 300, 'DUEL', {font: '42pt Impact', fill: 'gray'})
+        game.add.text(220, 300, this.selectArray[this.selected], {font: '42pt Impact', fill: 'gray'})
+        shadow = game.add.text(this.shadowX, this.shadowY, 'DUEL', {font: '42pt Impact', fill: '#AF1010'})
         game.add.text(220, 375, 'ADVENTURE', {font: '42pt Impact', fill: 'gray'})
         game.add.text(220, 450, 'HOW TO PLAY', {font: '42pt Impact', fill: 'gray'})
         arrow = game.add.sprite(168, 312, 'arrow')
@@ -44,6 +47,9 @@ const MenuState = {
             if (this.canMove && this.selectArray[this.selected] !== 'DUEL'){
                 arrow.position.y -= 75
                 this.selected--
+                shadow.destroy()
+                this.shadowY -= 75
+                shadow = game.add.text(this.shadowX, this.shadowY, this.selectArray[this.selected], {font: '42pt Impact', fill: '#AF1010'})
                 this.canMove = false
             }
         }
@@ -51,6 +57,9 @@ const MenuState = {
             if (this.canMove && this.selectArray[this.selected] !== 'HOWTO'){
                 arrow.position.y += 75
                 this.selected++
+                shadow.destroy()
+                this.shadowY += 75
+                shadow = game.add.text(this.shadowX, this.shadowY, this.selectArray[this.selected], {font: '42pt Impact', fill: '#AF1010'})
                 this.canMove = false
             }
         }
@@ -71,7 +80,7 @@ const MenuState = {
                 this.state.start('DuelOptionState')
             } else if (selection === 'ADVENTURE'){
                 alert('No Adventure Mode yet.')
-            } else if (selection === 'HOWTO'){
+            } else if (selection === 'HOW TO PLAY'){
                 this.state.start('HowToPlayState')
             }
         }

@@ -23,6 +23,7 @@ const DuelOptionState = {
         this.makeCharacter = function() {
         	characterSelector = game.add.sprite(190, 240, characterArray[character])
 	        characterSelector.animations.add('waiting', [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 6, 7, 8, 5, 6, 7, 8, 5, 6, 7, 8], 10, true)
+	        characterNameShadow = game.add.text(178, 298, characterArray[character], {font: '20pt Impact', fill: 'black'})
 	        characterName = game.add.text(180, 300, characterArray[character], {font: '20pt Impact', fill: 'darkred'})
         }
 
@@ -34,7 +35,8 @@ const DuelOptionState = {
         this.makeCharacter2 = function() {
         	characterSelector2 = game.add.sprite(578, 240, characterArray[character2])
 	        characterSelector2.animations.add('waiting2', [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 4, 4, 4, 4], 10, true)
-	        characterName2 = game.add.text(564, 300, characterArray[character2], {font: '20pt Impact', fill: 'darkblue'})
+	        characterNameShadow2 = game.add.text(562, 298, characterArray[character2], {font: '20pt Impact', fill: 'black'})
+	        characterName2 = game.add.text(564, 300, characterArray[character2], {font: '20pt Impact', fill: '#3399FF'})
         }
 
         this.moveArrow2 = function() {
@@ -47,7 +49,9 @@ const DuelOptionState = {
     create: function() {
         //Load Background and Title
         this.background = this.add.tileSprite(0, 0,  this.game.world.width, this.game.world.height, 'city')
+        game.add.text(158, 58, '-', {font: '42pt Impact', fill: 'gold'})
         rounds = game.add.text(160, 60, '-  ROUNDS TO WIN: ' + gamesToWin, {font: '42pt Impact', fill: 'black'})
+        game.add.text(613, 58, '+', {font: '42pt Impact', fill: 'gold'})
         game.add.text(615, 60, '+', {font: '42pt Impact', fill: 'black'})
         game.add.text(260, 170, 'CHARACTER SELECT', {font: '28pt Impact', fill: 'black'})
         //game.add.text(278, 350, 'WEAPON SELECT', {font: '28pt Impact', fill: 'gray'})
@@ -119,6 +123,7 @@ const DuelOptionState = {
 					} else {
 						character++
 					}
+					characterNameShadow.destroy()
 					characterSelector.kill()
 					characterName.destroy()
 					this.makeCharacter()
@@ -133,6 +138,7 @@ const DuelOptionState = {
 					} else {
 						character--
 					}
+					characterNameShadow.destroy()
 					characterSelector.kill()
 					characterName.destroy()
 					this.makeCharacter()
@@ -174,6 +180,7 @@ const DuelOptionState = {
 					} else {
 						character2++
 					}
+					characterNameShadow2.destroy()
 					characterSelector2.kill()
 					characterName2.destroy()
 					this.makeCharacter2()
@@ -188,6 +195,7 @@ const DuelOptionState = {
 					} else {
 						character2--
 					}
+					characterNameShadow2.destroy()
 					characterSelector2.kill()
 					characterName2.destroy()
 					this.makeCharacter2()
@@ -215,7 +223,7 @@ const DuelOptionState = {
       //Start mode
       if (this.selectArray[this.selected] === 'READY' && this.selectArray[this.selected2] === 'READY'){
       	if (!this.isReady) {
-      		this.isReady = game.add.text(330, 500, 'READY', {font: '42pt Impact', fill: 'gold'})
+      		this.isReady = game.add.text(332, 502, 'READY', {font: '42pt Impact', fill: 'gold'})
       	}
       	if (this.spaceBar.isDown) {
       		this.state.start('PreloadState')
