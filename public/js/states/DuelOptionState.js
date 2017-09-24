@@ -238,7 +238,7 @@ const DuelOptionState = {
       }
 
       //Back to Menu
-      if (this.backspace.isDown){
+      if (this.backspace.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_B)){
       	this.state.start('MenuState')
       }
     }

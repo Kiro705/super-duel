@@ -33,6 +33,9 @@ var PreloadState = {
         mapChoice++
     }
 
+    //reset game speed
+    game.time.slowMotion = 1.0
+
     if (mapChoice === 1) {
         //Level 1
         powerLocations = [[80, 40], [700, 40], [55, 470], [725, 470], [388, 100], [388, 425]]

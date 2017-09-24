@@ -5,13 +5,15 @@ const GameState = {
         this.gameOver = false
         this.gameOverCounter = 0
         this.occupied = [0, 0, 0, 0]
-        this.powerTypeArray = ['SPEED', 'FLOAT']
+        this.powerTypeArray = ['SPEED', 'FLOAT', 'SLOWDOWN']
         this.megaswordTimer = 0
         this.isMegasword = false
         this.powerUpCount = 0
         this.powerUpSpawn = 0
         this.floatCounter = 0
         this.floatOn = false
+        this.slowCounter = 0
+        this.slowOn = false
 
         //Player 1
         this.attackRight = undefined
@@ -104,9 +106,9 @@ const GameState = {
         powerups.enableBody = true
 
         //Starting Speed power up
-        var speedup = powerups.create(powerLocations[5][0], powerLocations[5][1], 'SPEED')
+        var speedup = powerups.create(powerLocations[5][0], powerLocations[5][1], 'FLOAT')
         speedup.body.gravity.y = 300
-        speedup.powerType = 'SPEED'
+        speedup.powerType = 'FLOAT'
         speedup.body.bounce.y = 1
         this.powerUpCount++
 
@@ -380,6 +382,10 @@ const GameState = {
                 this.floatCounter = 0
                 player.body.gravity.y = floatAmount
                 player2.body.gravity.y = floatAmount
+            } else if (powerup.powerType === 'SLOWDOWN'){
+                this.slowOn = true
+                this.slowCounter = 0
+                game.time.slowMotion = 2.0
             }
             if (thePlayer.name === 'p1'){
                 this.powerTimer = 0
@@ -528,8 +534,19 @@ const GameState = {
         if (this.floatCounter > powerupTimer) {
             player.body.gravity.y = 1000
             player2.body.gravity.y = 1000
-            floatOn = false
-            floatCounter = 0
+            this.floatOn = false
+            this.floatCounter = 0
+        }
+
+        //==============================SLOW TIME ===================================================
+        if (this.slowOn) {
+            this.slowCounter++
+        }
+
+        if (this.slowCounter > powerupTimer) {
+            game.time.slowMotion = 1.0
+            this.slowOn = false
+            this.slowCounter = 0
         }
         //==============================MEGASWORD ===================================================
         if (!this.isMegasword) {
@@ -593,7 +610,7 @@ const GameState = {
             if (score === gamesToWin || score2 === gamesToWin) {
                 game.add.text(116, 48, 'PRESS SPACE TO RETURN TO MENU', {font: '32pt Impact', fill: 'white'})
                 game.add.text(118, 50, 'PRESS SPACE TO RETURN TO MENU', {font: '32pt Impact', fill: 'black'})
-                if (this.spaceBar.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_A)) {
+                if (this.spaceBar.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_B)) {
                     this.state.start('MenuState')
                 }
             } else {
