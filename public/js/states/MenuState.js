@@ -26,6 +26,9 @@ const MenuState = {
         score = 0
         score2 = 0
 
+        //reset map cycle
+        mapChoice = 0
+
         //  Our controls.
         this.cursors = this.game.input.keyboard.createCursorKeys()
         this.spaceBar = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)

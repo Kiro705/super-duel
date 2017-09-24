@@ -8,6 +8,11 @@ var powerupsSpawn = 700 // How often powerups spawn
 var megaswordSpawn = 1200 //How long until the Megasword appears
 var floatAmount = 300 //How much gravity changes to
 var characterArray = ['Chow', 'EvilChow', 'Kagu']
+var powerLocations = []
+var pillarLocations = []
+var platformLocations = []
+var spawnLocations = []
+var mapChoice = 0
 
 //Player 1
 var score = 0
