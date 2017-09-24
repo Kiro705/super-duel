@@ -351,14 +351,14 @@ const GameState = {
 
         //==============================Powerups!!!! =====================================
         //spawn new powerups
-        if(this.powerUpCount < 4){
+        if(this.powerUpCount < 3){
             this.powerUpSpawn++
         }
 
         if(this.powerUpSpawn > powerupsSpawn){
             this.powerUpCount++
             this.powerUpSpawn = 0
-            let type = this.powerTypeArray[Math.floor(Math.random() * 2)]
+            let type = this.powerTypeArray[Math.floor(Math.random() * 3)]
             let locationIndex = Math.floor(Math.random() * 4)
             //so two powerups arn not in the same spot
             while (this.occupied[locationIndex] === 1) {
