@@ -106,10 +106,12 @@ const GameState = {
         powerups.enableBody = true
 
         //Starting Speed power up
-        var speedup = powerups.create(powerLocations[5][0], powerLocations[5][1], 'SPEED')
-        speedup.body.gravity.y = 300
-        speedup.powerType = 'SPEED'
-        speedup.body.bounce.y = 1
+            //ONLY SET UP FOR 3 POWER UPS AND 3 MAPS
+            //MAY ERROR OTHERWISE
+        var startPowerup = powerups.create(powerLocations[5][0], powerLocations[5][1], this.powerTypeArray[mapChoice - 1])
+        startPowerup.body.gravity.y = 300
+        startPowerup.powerType = this.powerTypeArray[mapChoice - 1]
+        startPowerup.body.bounce.y = 1
         this.powerUpCount++
 
         // The player and its settings
