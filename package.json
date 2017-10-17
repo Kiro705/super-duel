@@ -1,5 +1,5 @@
 {
-  "name": "coin-grab",
+  "name": "super-duel",
   "version": "1.0.0",
   "description": "",
   "main": "server/app.js",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Kiro705/coin-grab.git"
+    "url": "git+https://github.com/Kiro705/super-duel.git"
   },
   "author": "Jackson",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Kiro705/coin-grab/issues"
+    "url": "https://github.com/Kiro705/super-duel/issues"
   },
-  "homepage": "https://github.com/Kiro705/coin-grab#readme",
+  "homepage": "https://github.com/Kiro705/super-duel#readme",
   "dependencies": {
     "express": "^4.15.4",
     "phaser": "^2.6.2",
